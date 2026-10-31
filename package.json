@@ -1,0 +1,10 @@
+{
+  "name": "az-crossword",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Azerbaijani Crossword Game - Data layer and validator",
+  "scripts": {
+    "validate": "node tools/validate.js",
+    "test": "node --test tests/unit.test.js"
+  }
+}

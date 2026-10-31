@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "title": "Səviyyə 1",
+  "difficulty": 1,
+  "rows": 8,
+  "cols": 7,
+  "entries": [
+    { "n": 1, "row": 0, "col": 2, "dir": "down",   "answer": "GÖL",  "clue": "Quru ilə əhatə olunmuş təbii su hövzəsi" },
+    { "n": 2, "row": 2, "col": 1, "dir": "across", "answer": "ALMA", "clue": "Ağacda bitən şirəli və girdə meyvə" },
+    { "n": 2, "row": 2, "col": 1, "dir": "down",   "answer": "ANA",  "clue": "Övladını dünyaya gətirib bəsləyən qadın" },
+    { "n": 3, "row": 4, "col": 1, "dir": "across", "answer": "ARZU", "clue": "İnsanın qəlbində bəslədiyi dilək, istək" },
+    { "n": 4, "row": 4, "col": 4, "dir": "down",   "answer": "UŞAQ", "clue": "Hələ yetkinlik yaşına çatmamış kiçik insan" },
+    { "n": 5, "row": 7, "col": 4, "dir": "across", "answer": "QUŞ",  "clue": "Qanadları və lələkləri olan uçan heyvan" }
+  ]
+}

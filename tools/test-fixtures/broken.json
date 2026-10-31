@@ -1,0 +1,11 @@
+{
+  "id": 999,
+  "title": "Sınov Səviyyəsi (Xətalı Kəsişmə)",
+  "difficulty": 1,
+  "rows": 4,
+  "cols": 4,
+  "entries": [
+    { "n": 1, "row": 0, "col": 0, "dir": "across", "answer": "ANA", "clue": "Övladını dünyaya gətirən qadın" },
+    { "n": 2, "row": 0, "col": 1, "dir": "down",   "answer": "DAŞ", "clue": "Bərk mineral kütləsi" }
+  ]
+}

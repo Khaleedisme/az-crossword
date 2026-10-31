@@ -1,0 +1,15 @@
+{
+  "id": 2,
+  "title": "Səviyyə 2",
+  "difficulty": 2,
+  "rows": 7,
+  "cols": 7,
+  "entries": [
+    { "n": 1, "row": 1, "col": 1, "dir": "across", "answer": "GÜNƏŞ", "clue": "Gündüzlər yeri isidən və nura qərq edən parlaq ulduz" },
+    { "n": 1, "row": 1, "col": 1, "dir": "down",   "answer": "GƏMİ",  "clue": "Sularda hərəkət edən böyük nəqliyyat vasitəsi" },
+    { "n": 2, "row": 1, "col": 3, "dir": "down",   "answer": "NİDA",  "clue": "Hiss və həyəcanı ifadə edən köməkçi nitq hissəsi" },
+    { "n": 3, "row": 1, "col": 5, "dir": "down",   "answer": "ŞƏHƏR", "clue": "Kəndlərdən fərqli, əhalisi çox olan iri yaşayış məntəqəsi" },
+    { "n": 4, "row": 4, "col": 1, "dir": "across", "answer": "İŞARƏ", "clue": "Bir şeyi bildirmək üçün verilən xüsusi simvol və ya nişan" },
+    { "n": 5, "row": 4, "col": 2, "dir": "down",   "answer": "ŞAM",   "clue": "Fitil vasitəsilə yandırılan mum işıqlandırma vasitəsi" }
+  ]
+}
