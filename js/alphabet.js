@@ -40,7 +40,7 @@ export function isValidLetter(char, caseSensitive = true) {
  */
 export function toAzUpper(str) {
   if (typeof str !== 'string') return '';
-  return str.toLocaleUpperCase('az');
+  return str.normalize('NFC').toLocaleUpperCase('az');
 }
 
 /**
@@ -52,7 +52,7 @@ export function toAzUpper(str) {
  */
 export function toAzLower(str) {
   if (typeof str !== 'string') return '';
-  return str.toLocaleLowerCase('az');
+  return str.normalize('NFC').toLocaleLowerCase('az');
 }
 
 /**
@@ -63,5 +63,5 @@ export function toAzLower(str) {
  */
 export function normalizeAnswer(str) {
   if (typeof str !== 'string') return '';
-  return toAzUpper(str.trim());
+  return toAzUpper(str.normalize('NFC').trim());
 }

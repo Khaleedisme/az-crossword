@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azərbaycan Krossvord Oyunu</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1 id="app-title"></h1>
+      <div class="selector-group">
+        <label for="level-select" id="level-select-label" class="selector-label"></label>
+        <select id="level-select" class="level-select"></select>
+      </div>
+    </header>
+
+    <div id="completion-banner" class="completion-banner" role="status" aria-live="polite"></div>
+
+    <div id="clue-bar" class="clue-bar" aria-live="polite"></div>
+
+    <main class="grid-wrapper">
+      <div id="grid" class="crossword-grid" role="grid" tabindex="0"></div>
+    </main>
+
+    <section class="clues-container">
+      <div class="clues-section">
+        <h2 id="across-heading"></h2>
+        <ul id="across-clues" class="clue-list"></ul>
+      </div>
+      <div class="clues-section">
+        <h2 id="down-heading"></h2>
+        <ul id="down-clues" class="clue-list"></ul>
+      </div>
+    </section>
+
+    <input type="text" id="hidden-input" class="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" aria-hidden="true" tabindex="-1">
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

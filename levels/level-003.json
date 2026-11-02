@@ -5,9 +5,9 @@
   "rows": 7,
   "cols": 7,
   "entries": [
-    { "n": 1, "row": 1, "col": 1, "dir": "across", "answer": "ÇÖRƏK", "clue": "Un, su və maya qarışığından təndirdə və ya sobada bişirilən əsas nemət" },
-    { "n": 1, "row": 1, "col": 1, "dir": "down",   "answer": "ÇAY",   "clue": "Dəmlənərək fincanda içilən isti sərinləşdirici maye və ya təbii axar su" },
-    { "n": 2, "row": 1, "col": 5, "dir": "down",   "answer": "KİŞİ",  "clue": "Cəmiyyətdə qadının əksi olan yetkin erkək insan, bəy" },
+    { "n": 1, "row": 1, "col": 1, "dir": "across", "answer": "ÇÖRƏK", "clue": "Undan bişirilən və süfrənin əsası sayılan yemək" },
+    { "n": 1, "row": 1, "col": 1, "dir": "down",   "answer": "ÇAY",   "clue": "Stəkanda dəmləyib içdiyimiz qaynar içki" },
+    { "n": 2, "row": 1, "col": 5, "dir": "down",   "answer": "KİŞİ",  "clue": "Qadının qarşılığı olan yetkin insan" },
     { "n": 3, "row": 3, "col": 1, "dir": "across", "answer": "YAĞIŞ", "clue": "Buludlardan damcılar şəklində yer səthinə süzülən təbii yağıntı" },
     { "n": 4, "row": 3, "col": 2, "dir": "down",   "answer": "ARXA",  "clue": "Ön hissənin əksi olan tərəf, geridə qalan istiqamət" },
     { "n": 5, "row": 6, "col": 2, "dir": "across", "answer": "AÇIQ",  "clue": "Qapalı və ya bağlı olmayan, hər tərəfə sərbəst keçidi olan" }

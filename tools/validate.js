@@ -24,7 +24,6 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
  */
 export function extractWords(text) {
   if (typeof text !== 'string') return [];
-  const apostropheRegex = /['’ʼʻ`´]/g;
   const wordTokens = [];
 
   if (typeof Intl !== 'undefined' && Intl.Segmenter) {
@@ -56,8 +55,8 @@ export function extractWords(text) {
     }
     // If token contains an apostrophe (e.g. Bakı'da, Bakı’nın), split on apostrophe
     // so that the root proper noun stem is isolated and checked against answers
-    if (apostropheRegex.test(token)) {
-      const subParts = token.split(apostropheRegex);
+    const subParts = token.split(/['’ʼʻ`´]/);
+    if (subParts.length > 1) {
       for (const part of subParts) {
         const cleanPart = part.replace(/^[^\p{L}\p{M}]+|[^\p{L}\p{M}]+$/gu, '');
         if (cleanPart.length > 0) {
@@ -161,10 +160,14 @@ export function validateLevelData(data, filePath = 'level.json') {
     if (typeof entry.answer !== 'string') {
       addError(entryLabel, `Field "answer" must be a string, got ${typeof entry.answer}`);
       hasGeometricIntegrity = false;
-    } else if (entry.answer.length < 2) {
-      addError(entryLabel, `Answer "${entry.answer}" is too short (must be at least 2 letters)`);
-      hasGeometricIntegrity = false;
     } else {
+      if (entry.answer !== entry.answer.normalize('NFC')) {
+        addError(entryLabel, 'Answer is not NFC-normalized (possible combining character)');
+      }
+      if (entry.answer.length < 2) {
+        addError(entryLabel, `Answer "${entry.answer}" is too short (must be at least 2 letters)`);
+        hasGeometricIntegrity = false;
+      } else {
       // Rule 2: 32-letter Azerbaijani alphabet & UPPERCASE
       for (const char of entry.answer) {
         if (!isValidLetter(char)) {
@@ -191,6 +194,7 @@ export function validateLevelData(data, filePath = 'level.json') {
         seenAnswers.set(normAnswer, entry);
       }
     }
+  }
 
     // Rule 10: Clues are non-empty strings and do not contain their own answer as a whole word
     if (typeof entry.clue !== 'string' || entry.clue.trim().length === 0) {
@@ -583,10 +587,15 @@ export function validateIndexFile(indexPath) {
 
     const result = validateLevelFile(levelFilePath);
 
-    // Also check consistency between index descriptor and level content
-    if (result.ok) {
-      try {
-        const levelData = JSON.parse(fs.readFileSync(levelFilePath, 'utf8'));
+    let answers = [];
+    try {
+      const levelData = JSON.parse(fs.readFileSync(levelFilePath, 'utf8'));
+      if (Array.isArray(levelData.entries)) {
+        answers = levelData.entries
+          .filter(e => e && typeof e.answer === 'string')
+          .map(e => e.answer);
+      }
+      if (result.ok) {
         if (item.id !== levelData.id) {
           result.ok = false;
           result.errors.push(`[${levelFileName}] Index mismatch: index.json id (${item.id}) does not match level id (${levelData.id})`);
@@ -599,9 +608,9 @@ export function validateIndexFile(indexPath) {
           result.ok = false;
           result.errors.push(`[${levelFileName}] Index mismatch: index.json difficulty (${item.difficulty}) does not match level difficulty (${levelData.difficulty})`);
         }
-      } catch {
-        // Handled in validateLevelFile
       }
+    } catch {
+      // Handled in validateLevelFile
     }
 
     if (result.ok) {
@@ -613,7 +622,8 @@ export function validateIndexFile(indexPath) {
     details.push({
       file: levelFileName,
       ok: result.ok,
-      errors: result.errors
+      errors: result.errors,
+      answers
     });
   }
 
@@ -627,6 +637,7 @@ export async function main() {
   const args = process.argv.slice(2);
   let okCount = 0;
   let errorCount = 0;
+  const allValidatedLevels = [];
 
   if (args.length === 0) {
     // Default: validate all levels in index.json
@@ -646,6 +657,7 @@ export async function main() {
     errorCount = errorLevels;
 
     for (const item of details) {
+      allValidatedLevels.push(item);
       if (item.ok) {
         console.log(`PASS: ${item.file}`);
       } else {
@@ -688,6 +700,7 @@ export async function main() {
         okCount += okLevels;
         errorCount += errorLevels;
         for (const item of details) {
+          allValidatedLevels.push(item);
           if (item.ok) {
             console.log(`PASS: ${item.file}`);
           } else {
@@ -703,6 +716,23 @@ export async function main() {
 
       console.log(`Validating ${rawArg}...`);
       const { ok, errors } = validateLevelFile(targetPath);
+      let answers = [];
+      try {
+        const levelData = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
+        if (Array.isArray(levelData.entries)) {
+          answers = levelData.entries
+            .filter(e => e && typeof e.answer === 'string')
+            .map(e => e.answer);
+        }
+      } catch {}
+
+      allValidatedLevels.push({
+        file: path.basename(targetPath),
+        ok,
+        errors,
+        answers
+      });
+
       if (ok) {
         console.log(`PASS: ${rawArg}\n`);
         okCount++;
@@ -714,6 +744,26 @@ export async function main() {
         console.log('');
         errorCount++;
       }
+    }
+  }
+
+  // Cross-level duplicate answers check
+  const answerToFiles = new Map();
+  for (const item of allValidatedLevels) {
+    if (item.answers) {
+      for (const ans of item.answers) {
+        if (!answerToFiles.has(ans)) {
+          answerToFiles.set(ans, new Set());
+        }
+        answerToFiles.get(ans).add(item.file);
+      }
+    }
+  }
+
+  for (const [ans, filesSet] of answerToFiles.entries()) {
+    if (filesSet.size > 1) {
+      const fileList = Array.from(filesSet).join(', ');
+      console.log(`WARNING: answer "${ans}" used in ${fileList}`);
     }
   }
 
