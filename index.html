@@ -10,13 +10,18 @@
   <div class="app-container">
     <header>
       <h1 id="app-title"></h1>
-      <div class="selector-group">
-        <label for="level-select" id="level-select-label" class="selector-label"></label>
-        <select id="level-select" class="level-select"></select>
+      <div class="header-controls">
+        <span id="current-level-title" class="current-level-title"></span>
+        <button type="button" id="levels-toggle-btn" class="levels-toggle-btn"></button>
       </div>
     </header>
 
-    <div id="completion-banner" class="completion-banner" role="status" aria-live="polite"></div>
+    <section id="levels-panel" class="levels-panel" hidden></section>
+
+    <div id="completion-banner" class="completion-banner" role="status" aria-live="polite">
+      <span id="completion-message"></span>
+      <button type="button" id="next-level-btn" class="next-level-btn" hidden></button>
+    </div>
 
     <div id="clue-bar" class="clue-bar">
       <button type="button" id="clue-prev-btn" class="clue-nav-btn">‹</button>
@@ -27,6 +32,16 @@
     <main class="grid-wrapper">
       <div id="grid" class="crossword-grid" role="grid" tabindex="0"></div>
     </main>
+
+    <div class="helpers-container">
+      <div class="helpers-buttons">
+        <button type="button" id="check-btn" class="helper-btn"></button>
+        <button type="button" id="reveal-letter-btn" class="helper-btn"></button>
+        <button type="button" id="reveal-word-btn" class="helper-btn"></button>
+        <button type="button" id="reset-btn" class="helper-btn"></button>
+      </div>
+      <div id="helpers-status" class="helpers-status" role="status" aria-live="polite"></div>
+    </div>
 
     <section class="clues-container">
       <div class="clues-section">

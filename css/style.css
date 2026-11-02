@@ -55,28 +55,81 @@ h1 {
   text-align: center;
 }
 
-.selector-group {
+.header-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 }
 
-.selector-label {
-  font-size: 0.9rem;
+.current-level-title {
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
-.level-select {
-  flex: 1;
-  max-width: 200px;
-  padding: 6px 10px;
-  font-size: 0.95rem;
+.levels-toggle-btn {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
   border-radius: 6px;
   border: 1px solid var(--cell-border);
   background-color: var(--card-bg);
   color: var(--text-primary);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.levels-toggle-btn:active {
+  background-color: #cbd5e1;
+}
+
+.levels-panel {
+  background-color: var(--card-bg);
+  border: 1px solid var(--cell-border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.levels-panel[hidden] {
+  display: none;
+}
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 8px;
+}
+
+.level-btn {
+  height: 40px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--cell-border);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.level-btn.current {
+  background-color: var(--cell-selected);
+  border-color: var(--outline-selected);
+  outline: 2px solid var(--outline-selected);
+  outline-offset: -1px;
+}
+
+.level-btn:active {
+  background-color: #cbd5e1;
 }
 
 .completion-banner {
@@ -92,7 +145,33 @@ h1 {
 }
 
 .completion-banner.visible {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.next-level-btn {
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background-color: #15803d;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.next-level-btn[hidden] {
+  display: none;
+}
+
+.next-level-btn:active {
+  background-color: #166534;
 }
 
 .clue-bar {
@@ -146,7 +225,7 @@ h1 {
   display: flex;
   justify-content: center;
   width: 100%;
-  overflow: hidden;
+  padding: 1px;
 }
 
 .crossword-grid {
@@ -199,6 +278,16 @@ h1 {
   z-index: 1;
 }
 
+.cell.letter.wrong {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.cell.letter.wrong.selected {
+  background-color: #fecaca;
+  outline-color: #dc2626;
+}
+
 .cell-number {
   position: absolute;
   top: 1px;
@@ -208,6 +297,52 @@ h1 {
   font-weight: 500;
   color: var(--text-secondary);
   pointer-events: none;
+}
+
+.helpers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.helpers-buttons {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.helper-btn {
+  flex: 1;
+  min-width: 0;
+  height: 38px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--cell-border);
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  white-space: nowrap;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.helper-btn:active {
+  background-color: #cbd5e1;
+}
+
+.helpers-status {
+  min-height: 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--text-secondary);
 }
 
 .clues-container {
@@ -318,5 +453,15 @@ h1 {
 
   .keyboard-key:hover {
     background-color: #f1f5f9;
+  }
+
+  .levels-toggle-btn:hover,
+  .level-btn:hover,
+  .helper-btn:hover {
+    background-color: #f1f5f9;
+  }
+
+  .next-level-btn:hover {
+    background-color: #166534;
   }
 }

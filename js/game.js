@@ -4,10 +4,10 @@ import { isValidLetter, toAzUpper } from './alphabet.js';
  * Crossword game state and core logic (pure, no DOM).
  */
 export class CrosswordGame {
-  constructor(level) {
+  constructor(level, initialLetters = {}) {
     this.level = level;
     // Map of "row,col" -> uppercase letter
-    this.letters = {};
+    this.letters = { ...initialLetters };
     // Selected cell coordinates { row, col } or null
     this.selected = null;
     // Current direction: 'across' or 'down'
@@ -20,6 +20,8 @@ export class CrosswordGame {
     if (ordered.length > 0) {
       this.selectEntry(ordered[0].id);
     }
+
+    this.checkCompletion();
   }
 
   /**
@@ -166,6 +168,64 @@ export class CrosswordGame {
     }
 
     this.checkCompletion();
+  }
+
+  /**
+   * Reveals the selected cell by typing its solution letter.
+   * Reuses typeLetter to advance selection and check completion.
+   */
+  revealCell() {
+    if (!this.selected || !this.level) return;
+    const cell = this.level.cells[this.selected.row]?.[this.selected.col];
+    if (!cell) return;
+    this.typeLetter(cell.solution);
+  }
+
+  /**
+   * Fills every cell of the currently selected entry with its solution letter,
+   * then updates completion status.
+   */
+  revealEntry() {
+    const entry = this.getSelectedEntry();
+    if (!entry || !this.level) return;
+    for (const coord of entry.cells) {
+      const cell = this.level.cells[coord.row]?.[coord.col];
+      if (cell) {
+        this.letters[`${coord.row},${coord.col}`] = cell.solution;
+      }
+    }
+    this.checkCompletion();
+  }
+
+  /**
+   * Returns a list of coordinates for all non-empty cells whose letter
+   * does not match the cell solution.
+   *
+   * @returns {Array<{ row: number, col: number }>}
+   */
+  getWrongCells() {
+    const wrong = [];
+    if (!this.level || !this.level.cells) return wrong;
+    for (let r = 0; r < this.level.rows; r++) {
+      for (let c = 0; c < this.level.cols; c++) {
+        const cell = this.level.cells[r][c];
+        if (cell) {
+          const letter = this.letters[`${r},${c}`];
+          if (letter && letter !== cell.solution) {
+            wrong.push({ row: r, col: c });
+          }
+        }
+      }
+    }
+    return wrong;
+  }
+
+  /**
+   * Clears all letters for this level and resets completion status.
+   */
+  reset() {
+    this.letters = {};
+    this.completed = false;
   }
 
   /**

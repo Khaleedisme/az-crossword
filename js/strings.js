@@ -14,6 +14,17 @@ export const STRINGS = Object.freeze({
   backspace: 'Sil',
   prevClue: 'Əvvəlki ipucu',
   nextClue: 'Növbəti ipucu',
+  check: 'Yoxla',
+  revealLetter: 'Hərfi aç',
+  revealWord: 'Sözü aç',
+  reset: 'Sıfırla',
+  confirmReset: 'Bu səviyyədəki bütün hərflər silinsin?',
+  allCorrect: 'Bütün yazılanlar düzgündür.',
+  wrongCount: (n) => `${n} səhv hərf var.`,
+  levels: 'Səviyyələr',
+  nextLevel: 'Növbəti səviyyə',
+  completedStatus: 'Tamamlandı',
+  inProgressStatus: 'Davam edir',
   cellLabel: (row, col, num, letter) => {
     let desc = `${row + 1}-ci sətir, ${col + 1}-ci sütun`;
     if (num) {

@@ -1,11 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ALPHABET } from '../js/alphabet.js';
-import { layout, KEYBOARD_LAYOUT } from '../js/keyboard.js';
+import { KEYBOARD_LAYOUT } from '../js/keyboard.js';
 
 test('Keyboard: flattened layout contains exactly the 32 ALPHABET letters, no duplicates, none missing', () => {
-  assert.equal(layout, KEYBOARD_LAYOUT);
-  const flattened = layout.flat();
+  const flattened = KEYBOARD_LAYOUT.flat();
 
   // Exactly 32 letters
   assert.equal(flattened.length, 32);

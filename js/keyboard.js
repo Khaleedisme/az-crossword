@@ -10,28 +10,15 @@ export const KEYBOARD_LAYOUT = [
   ['Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Ç', 'Ş']
 ];
 
-export const layout = KEYBOARD_LAYOUT;
-
 /**
  * Renders the virtual keyboard into a given container element.
  *
  * @param {HTMLElement} container
- * @param {Object|Function} callbacksOrOnLetter
- * @param {Function} [maybeOnBackspace]
+ * @param {{ onLetter?: (letter: string) => void, onBackspace?: () => void }} [options]
  */
-export function renderKeyboard(container, callbacksOrOnLetter = {}, maybeOnBackspace) {
+export function renderKeyboard(container, { onLetter, onBackspace } = {}) {
   if (!container) return;
   container.innerHTML = '';
-
-  let onLetter;
-  let onBackspace;
-  if (typeof callbacksOrOnLetter === 'function') {
-    onLetter = callbacksOrOnLetter;
-    onBackspace = maybeOnBackspace;
-  } else if (callbacksOrOnLetter && typeof callbacksOrOnLetter === 'object') {
-    onLetter = callbacksOrOnLetter.onLetter;
-    onBackspace = callbacksOrOnLetter.onBackspace;
-  }
 
   KEYBOARD_LAYOUT.forEach((rowLetters, rowIndex) => {
     const rowEl = document.createElement('div');
@@ -77,5 +64,3 @@ export function renderKeyboard(container, callbacksOrOnLetter = {}, maybeOnBacks
     container.appendChild(rowEl);
   });
 }
-
-export default KEYBOARD_LAYOUT;

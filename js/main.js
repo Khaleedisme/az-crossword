@@ -1,6 +1,7 @@
 import { buildLevel } from './level.js';
 import { CrosswordGame } from './game.js';
 import { CrosswordUI } from './ui.js';
+import { loadProgress, saveProgress, sanitizeLetters } from './storage.js';
 
 async function initApp() {
   try {
@@ -13,17 +14,50 @@ async function initApp() {
       throw new Error('No levels found in index.json');
     }
 
-    const firstLevelItem = indexList[0];
-    const initialLevelData = await loadLevelFile(firstLevelItem.file);
-    const initialLevel = buildLevel(initialLevelData);
-    const game = new CrosswordGame(initialLevel);
+    const progress = loadProgress();
 
-    const ui = new CrosswordUI(game, {
-      onLevelChange: async (levelFile) => {
+    // Determine initial level: open lastLevelId if it exists in index.json, otherwise the first level
+    let currentLevelItem = null;
+    if (progress.lastLevelId != null) {
+      currentLevelItem = indexList.find(lvl => lvl.id === progress.lastLevelId || String(lvl.id) === String(progress.lastLevelId));
+    }
+    if (!currentLevelItem) {
+      currentLevelItem = indexList[0];
+    }
+
+    async function createGameForLevel(levelItem) {
+      const levelData = await loadLevelFile(levelItem.file);
+      const level = buildLevel(levelData);
+      const savedLevel = progress.levels?.[String(levelItem.id)];
+      const sanitized = sanitizeLetters(level, savedLevel?.letters);
+      return new CrosswordGame(level, sanitized);
+    }
+
+    const initialGame = await createGameForLevel(currentLevelItem);
+
+    // Save initial open so lastLevelId is recorded
+    progress.lastLevelId = currentLevelItem.id;
+    saveProgress(progress);
+
+    const ui = new CrosswordUI(initialGame, {
+      levelList: indexList,
+      getProgress: () => progress,
+      onChange: (currentGame) => {
+        progress.lastLevelId = currentGame.level.id;
+        if (!progress.levels || typeof progress.levels !== 'object') {
+          progress.levels = {};
+        }
+        progress.levels[String(currentGame.level.id)] = {
+          letters: { ...currentGame.letters },
+          completed: currentGame.completed
+        };
+        saveProgress(progress);
+      },
+      onLevelSelect: async (levelItem) => {
         try {
-          const levelData = await loadLevelFile(levelFile);
-          const level = buildLevel(levelData);
-          const newGame = new CrosswordGame(level);
+          const newGame = await createGameForLevel(levelItem);
+          progress.lastLevelId = levelItem.id;
+          saveProgress(progress);
           ui.setGame(newGame);
         } catch (err) {
           console.error('Error switching level:', err);
@@ -31,7 +65,7 @@ async function initApp() {
       }
     });
 
-    ui.initLevelSelector(indexList, firstLevelItem.file);
+    ui.setLevelList(indexList);
   } catch (err) {
     console.error('Error initializing crossword app:', err);
   }
