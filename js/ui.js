@@ -1,4 +1,5 @@
 import { isValidLetter, toAzUpper } from './alphabet.js';
+import { renderKeyboard } from './keyboard.js';
 import { STRINGS } from './strings.js';
 
 /**
@@ -11,6 +12,9 @@ export class CrosswordUI {
 
     this.gridEl = document.getElementById('grid');
     this.clueBarEl = document.getElementById('clue-bar');
+    this.clueTextEl = document.getElementById('clue-text');
+    this.cluePrevBtnEl = document.getElementById('clue-prev-btn');
+    this.clueNextBtnEl = document.getElementById('clue-next-btn');
     this.bannerEl = document.getElementById('completion-banner');
     this.levelSelectEl = document.getElementById('level-select');
     this.levelSelectLabelEl = document.getElementById('level-select-label');
@@ -19,11 +23,12 @@ export class CrosswordUI {
     this.downHeadingEl = document.getElementById('down-heading');
     this.acrossCluesEl = document.getElementById('across-clues');
     this.downCluesEl = document.getElementById('down-clues');
-    this.hiddenInputEl = document.getElementById('hidden-input');
+    this.keyboardEl = document.getElementById('keyboard');
 
     this.initStaticText();
     this.initKeyboardEvents();
-    this.initMobileInput();
+    this.initClueNavEvents();
+    this.initVirtualKeyboard();
     this.render();
   }
 
@@ -37,6 +42,53 @@ export class CrosswordUI {
     if (this.downHeadingEl) this.downHeadingEl.textContent = STRINGS.down;
     if (this.bannerEl) this.bannerEl.textContent = STRINGS.completed;
     if (this.gridEl) this.gridEl.setAttribute('aria-label', STRINGS.gridLabel);
+    if (this.cluePrevBtnEl) {
+      this.cluePrevBtnEl.setAttribute('aria-label', STRINGS.prevClue);
+      this.cluePrevBtnEl.textContent = '‹';
+    }
+    if (this.clueNextBtnEl) {
+      this.clueNextBtnEl.setAttribute('aria-label', STRINGS.nextClue);
+      this.clueNextBtnEl.textContent = '›';
+    }
+  }
+
+  /**
+   * Initializes navigation buttons inside the clue bar.
+   */
+  initClueNavEvents() {
+    if (this.cluePrevBtnEl) {
+      this.cluePrevBtnEl.addEventListener('pointerdown', (e) => e.preventDefault());
+      this.cluePrevBtnEl.addEventListener('mousedown', (e) => e.preventDefault());
+      this.cluePrevBtnEl.addEventListener('click', () => {
+        this.game.prevEntry();
+        this.render();
+      });
+    }
+    if (this.clueNextBtnEl) {
+      this.clueNextBtnEl.addEventListener('pointerdown', (e) => e.preventDefault());
+      this.clueNextBtnEl.addEventListener('mousedown', (e) => e.preventDefault());
+      this.clueNextBtnEl.addEventListener('click', () => {
+        this.game.nextEntry();
+        this.render();
+      });
+    }
+  }
+
+  /**
+   * Initializes the virtual Azerbaijani keyboard.
+   */
+  initVirtualKeyboard() {
+    if (!this.keyboardEl) return;
+    renderKeyboard(this.keyboardEl, {
+      onLetter: (letter) => {
+        this.game.typeLetter(letter);
+        this.render();
+      },
+      onBackspace: () => {
+        this.game.backspace();
+        this.render();
+      }
+    });
   }
 
   /**
@@ -145,34 +197,6 @@ export class CrosswordUI {
   }
 
   /**
-   * Sets up hidden input for mobile software keyboard fallback.
-   */
-  initMobileInput() {
-    if (!this.hiddenInputEl) return;
-
-    this.hiddenInputEl.addEventListener('input', (e) => {
-      if (e.inputType === 'deleteContentBackward' || e.inputType === 'deleteWordBackward') {
-        this.game.backspace();
-        this.render();
-        this.hiddenInputEl.value = '';
-        return;
-      }
-
-      const text = e.data || this.hiddenInputEl.value;
-      this.hiddenInputEl.value = '';
-      if (text) {
-        for (const char of text) {
-          const upper = toAzUpper(char);
-          if (isValidLetter(upper)) {
-            this.game.typeLetter(upper);
-          }
-        }
-        this.render();
-      }
-    });
-  }
-
-  /**
    * Main render function that updates grid, clues, clue bar, and completion banner.
    */
   render() {
@@ -191,7 +215,15 @@ export class CrosswordUI {
     }
 
     // 3. Render Clue Bar
-    if (this.clueBarEl) {
+    if (this.clueTextEl) {
+      const entry = this.game.getSelectedEntry();
+      if (entry) {
+        const dirName = STRINGS[entry.dir] || entry.dir;
+        this.clueTextEl.textContent = `${entry.n} ${dirName}: ${entry.clue}`;
+      } else {
+        this.clueTextEl.textContent = STRINGS.noClueSelected;
+      }
+    } else if (this.clueBarEl) {
       const entry = this.game.getSelectedEntry();
       if (entry) {
         const dirName = STRINGS[entry.dir] || entry.dir;
@@ -255,9 +287,6 @@ export class CrosswordUI {
 
           cellEl.addEventListener('click', () => {
             this.game.selectCell(r, c);
-            if (this.hiddenInputEl) {
-              this.hiddenInputEl.focus({ preventScroll: true });
-            }
             this.render();
           });
         }
@@ -290,9 +319,6 @@ export class CrosswordUI {
 
       li.addEventListener('click', () => {
         this.game.selectEntry(entry.id);
-        if (this.hiddenInputEl) {
-          this.hiddenInputEl.focus({ preventScroll: true });
-        }
         this.render();
       });
 

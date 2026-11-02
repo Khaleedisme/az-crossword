@@ -5,6 +5,7 @@ Azərbaycan dili üçün krossvord oyunu məlumat strukturu, ortoqrafik və hən
 ## Layihə Strukturu
 
 - `js/alphabet.js`: 32 hərfdən ibarət Azərbaycan əlifbası, simvol yoxlanışı və böyük/kiçik hərf çevirmələri.
+- `js/keyboard.js`: Azərbaycan virtual klaviatura düzümü və render funksiyası.
 - `js/strings.js`: Bütün interfeys mətnləri.
 - `js/level.js`: Səviyyə strukturunu quran modul (`buildLevel`).
 - `js/game.js`: Oyun məntiqi və vəziyyət idarəetməsi.
@@ -15,6 +16,7 @@ Azərbaycan dili üçün krossvord oyunu məlumat strukturu, ortoqrafik və hən
 - `levels/level-XXX.json`: Səviyyə faylları.
 - `tests/unit.test.js`: Əlifba və validator qaydaları üçün vahid testləri.
 - `tests/level.test.js`: `buildLevel` modulu üçün vahid testlər.
+- `tests/keyboard.test.js`: Virtual klaviatura düzümü üçün vahid testlər.
 
 ## Oyunu Başlatmaq
 
@@ -26,8 +28,8 @@ python -m http.server 8080
 
 Brauzerdə açın: http://localhost:8080
 
-### Klaviatura Qeydi
-İngilis klaviaturasında "i" düyməsi "İ" hərfini, Shift+I isə "I" hərfini daxil edir. Ə, Ö, Ü, Ç, Ş, Ğ hərflərini yazmaq üçün virtual klaviatura mərhələsinə qədər Azərbaycan klaviatura düzümündən istifadə edin.
+### Klaviatura
+Ekranda daimi olaraq Azərbaycan virtual klaviaturası göstərilir və bütün ekran ölçülərində (o cümlədən mobil telefonlarda) rahat yazmağa imkan verir. Eyni zamanda fiziki klaviatura da əvvəlki kimi işləyir.
 
 ## İstifadə Qaydası
 

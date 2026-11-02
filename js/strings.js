@@ -11,6 +11,9 @@ export const STRINGS = Object.freeze({
   completed: 'Təbrik edirik! Səviyyə tamamlandı.',
   gridLabel: 'Krossvord toru',
   noClueSelected: 'İpucu seçilməyib',
+  backspace: 'Sil',
+  prevClue: 'Əvvəlki ipucu',
+  nextClue: 'Növbəti ipucu',
   cellLabel: (row, col, num, letter) => {
     let desc = `${row + 1}-ci sətir, ${col + 1}-ci sütun`;
     if (num) {
